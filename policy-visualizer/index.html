@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+    <title>Policy Visualizer</title>
+    <link rel="icon" href="resources/plan.png">
+
+    <!-- CSS -->
+    <link href="libs/vis-js/vis.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="resources/policy.css">
+
+    <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
+
+    <!-- JS -->
+    <script type="text/javascript" src="libs/vis-js/vis.min.js"></script>
+    <script src='resources/visualizer.js'></script>
+
+    <!-- JQuery (and UI)-->
+    <!-- script src="http://code.jquery.com/jquery-1.9.1.js"></script -->
+    <script src="libs/jquery-1.11.1/jquery-1.11.1.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/base/jquery-ui.css"/>
+
+    <!-- Bootstrap -->
+    <script src="libs/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Font Awesome icons -->
+ <link href="libs/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="resources/css_browser_selector.js" type="text/javascript"></script>
+
+  </head>
+
+  <body onload="init()" style="width: 100%;">
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Policy Visualizer</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="navbar-collapse collapse" id="add-predicate-form">
+          <ul class="nav navbar-nav">
+            <!-- <li><a id="menubar-new" href="#" data-toggle="tooltip" title="Start a new TPN" data-placement="bottom"><i class="fa fa-file-o"></i>  New</a></li> -->
+            <li><a id="menubar-open" href="#" data-toggle="tooltip" title="Load policy from a file on your computer" data-placement="bottom" onclick='open_file_go(event)'><i class="fa fa-folder-open-o"></i> Open</a></li>
+            <!-- <li><a id="menubar-save" href="#"><i class="fa fa-save"></i> Save</a></li> -->
+            <li><a id="menubar-reset" href="#" data-toggle="tooltip" title="Reset graph" data-placement="bottom" onclick="resetNetwork()"><i class="fa fa-refresh"></i> Reset</a></li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-eye"></i> View <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a id="menubar-view-all"  data-toggle="tooltip" title="View all the graph" data-placement="bottom" onclick="fitAnimated()"><i class="fa fa-binoculars "></i> View All</a></li>
+                <li class="divider"></li>
+                <li><a id="menubar-view-all"  data-toggle="tooltip" title="View all the graph" data-placement="bottom" onclick="focusRoot(5)"><i class="fa fa-eye "></i> View Root </a></li>
+                <li class="divider"></li>
+                <li><a id="menubar-top-down-view"  data-toggle="tooltip" title="Top-Down View" data-placement="bottom" onclick="orientUD()"><i class="fa fa-arrows-v"></i> Top-Down</a></li>
+                <li class="divider"></li>
+                <li><a id="menubar-left-right-view" data-toggle="tooltip" title="Left-Right View" data-placement="bottom" onclick="orientLR()"><i class="fa fa-arrows-h"></i> Left-Right</a></li>
+              </ul>
+            </li>
+
+            <!-- <li><a id="menubar-settings" href="#" onclick="showPropertyOptions()" ><i class="fa fa-cog"></i> Settings</a></li> -->
+
+            <li class="dropdown mega-dropdown ">
+              <a href="#" class="dropdown-toggle "><i class="fa fa-cog"></i> Settings <span class="caret"></span></a>
+              <ul class="dropdown-menu mega-dropdown-menu" role="menu">
+                <li><a id="menubar-settings" onclick="showPropertyOptions()"><i class="fa fa-cog"></i> Properties </a></li>
+                <li class="divider"></li>
+                <li><a id="menubar-about" href="#"> Hierarchical <input type="checkbox" onclick='updateHierarchical(this);'></a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-life-bouy"></i> Help <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a id="menubar-help" href="#"><i class="fa fa-life-bouy"></i> Help...</a></li>
+                <li class="divider"></li>
+                <li><a id="menubar-about" href="#"><i class="fa fa-child"></i> About...</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <div id="interactions" style="display:none;">
+          <div>
+            <p>Level Spacing</p>
+            <input id="slider1" class="slider" type="range" name="points" min="0" max="10" value="5" onchange="updateSlider1(this.value)">
+          </div>
+          <div>
+            <p>Node Spacing</p>
+            <input id="slider2" class="slider" type="range" name="points" min="0" max="10" value="5" onchange="updateSlider2(this.value)">
+          </div>
+        </div>
+
+
+        </div>
+        <!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+
+    </nav>
+
+    <div id="output_container" class="ui-resizable" style="margin: 60px 10px 0px; width:10%; height:10%;">
+      <pre id='output' class="ui-resizable" style="overflow:hidden; width:100%; height:100%;">
+    </div>
+
+    <!-- <div id='optionsContainer'></div> -->
+
+    <div id="mynetwork" style="position:absolute; top:60px; width:calc(100% - 20px); margin: 0px 10px; height: calc(100% - 50px)"></div>
+
+    <div id ="coverup"></div>
+
+    <img id="close_properties" src="resources/close.png" onclick="hidePropertyOptions()"></img>
+    <form id="properties_form">
+      <h3>Select properties to draw on nodes:</h3>
+    </form>
+
+    <!-- An invisible file input - necessary for Open to work -->
+    <input type="file" id="file-input" onchange='openFile(event)' style="display:none;"/>
+
+  </body>

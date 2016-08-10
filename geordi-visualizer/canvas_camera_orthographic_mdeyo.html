@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Geordi Policy Visualizer</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<style>
+		body {
+			/*font-family: Monospace;*/
+			background-color: #f0f0f0;
+			margin: 0px;
+			overflow: hidden;
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="mdeyo_camera.css">
+
+	<script src="build/three.js"></script>
+	<script src="js/controls/TrackballControls.js"></script>
+	<script src="js/Detector.js"></script>
+	<script src="js/loaders/collada/Animation.js"></script>
+	<script src="js/loaders/collada/AnimationHandler.js"></script>
+	<script src="js/loaders/collada/KeyFrameAnimation.js"></script>
+	<script src="js/loaders/ColladaLoader.js"></script>
+
+	<script src="mdeyo_camera.js"></script>
+
+</head>
+
+<body onload="init();animate();">
+
+	<!-- <h2>HEADing</h2> -->
+
+	<div id='title'>
+		<h2>Geordi Vehicle Models</h2>
+
+		<div id='buttons_row'>
+			<div style="width:48%;">
+				<p style="margin:0px;">Main Vehicle</p>
+				<input type='file' accept='json' onchange='openFile(event)' />
+			</div>
+
+			<div style="width:48%;">
+				<p style="margin:0px;">Other Vehicles</p>
+				<input type='file' accept='json' onchange='openFile2(event)' />
+			</div>
+		</div>
+
+		<!-- <img id='output'> -->
+		<!-- </div> -->
+		<div id='timestep_navigator'>
+
+			<button type="button" onclick="moveTime(-1)">Reverse</button>
+			<button id="timestep_text">Timestep: 1</button>
+			<button type="button" onclick="moveTime(1)">Forward</button>
+
+		</div>
+
+
+		<pre id="output_div"></pre>
+
+
+	</div>
+
+	<div id="threejs_container" style="display:inline-block;margin-right:20px; margin-top:50px; border-style: solid; border-color: #000000; float:right;"> </div>
+
+</body>
+
+</html>
